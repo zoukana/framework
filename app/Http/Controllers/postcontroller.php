@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\assane;
 use Illuminate\Http\Request;
 use Hash;
+use App\Roles;
 use Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -85,6 +86,7 @@ protected function connexion(Request $request){
 
 
     ]);
+    //redirection
    $users = assane::all();
    foreach($users as $user) {
     if ($user->email == $request->get("email") && $user->password == $request->get("password")){
@@ -94,57 +96,17 @@ protected function connexion(Request $request){
 
    return redirect('/');
 
-   //dd($user);
-} 
-   /*  $request->session()->flash('enregistrement valide')
-    return to_route('post.create'); */
-/*   public function _construct()
-
-    {
-        $this->middleware('guest')->except('logout');
-    }
-    protected function redirectTo() */
-
-
-
-
-  
-
+   if (!Auth::role == administrateur) {
+    return redirect('/admin');
+} else if ($user->role == utilisateur_user) {
+    return redirect('/user');
+} else if($user->etat == 1){
+    return redirect('/');
 }
 
-/* class postcontroller extends Controller
-{
-    public function index()
-    {
-        return view('/connexion');
-    }  
-      
-    public function inscription(Request $request)
-    {
-       
+
+} 
+} 
+
+
    
-        $validation = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('/admin')
-                        ->withSuccess('Signed in');
-        }
-  
-        return redirect("/connexion")->withSuccess('connexion details are not valid');
-    }    
-    
-    public function dashboard()
-    {
-        if(Auth::check()){
-            return view('/user');
-        }
-  
-        return redirect("/user")->withSuccess('You are not allowed to access');
-    }
-    
-    public function signOut() {
-        Session::flush();
-        Auth::logout();
-  
-        return Redirect('/connexion');
-    }
- } */
